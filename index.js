@@ -33,7 +33,8 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl',(req,res) => {
-  dns.lookup(req.body.url, async (err,address,family) => {
+  const baseURL =new URL(req.body.url).origin.split("//")[1];
+  dns.lookup(baseURL, async (err,address,family) => {
     if(err) res.json({ error: 'invalid url' });
     let shortValue = await Url.find().countDocuments();
     shortValue += 1;
@@ -49,7 +50,7 @@ app.post('/api/shorturl',(req,res) => {
 
 app.get('/api/shorturl/:short_url',(req,res) => {
   const url = Url.findOne({short_url: req.params.short_url}).original_url;
-  res.redirect(url);
+  res.json({url: url});
 });
 
 app.listen(port, function() {
