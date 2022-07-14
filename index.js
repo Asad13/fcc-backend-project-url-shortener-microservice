@@ -17,8 +17,8 @@ app.use('/public', express.static(`${process.cwd()}/public`));
 app.use(bodyParser.urlencoded({extended: false}));
 
 const urlSchema = new mongoose.Schema({
-  original_url: {type: String,required: true,unique: true},
-  short_url: {type: Number,required: true, unique: true}
+  original_url: {type: String,required: true},
+  short_url: {type: Number,required: true}
 });
 
 const Url = mongoose.model('Url',urlSchema);
@@ -33,15 +33,17 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl',(req,res) => {
-  dns.lookup(req.body.url,(err, address, family) => {
-    if(err) res.json({ error: 'invalid url' });
-    const shortValue = Url.find().countDocuments() + 1;
-    const url = new Url({original_url: req.body.url,short_url: shortValue});
-    url.save(function(err,data){
-      if(err) res.json({ error: 'invalid url' });
-      res.json({original_url: req.body.url,short_url: shortValue});//{original_url: req.body.url, short_url: shortValue}
-    })
-  })
+  console.log(req.body);
+  res.send(req.body);
+  // dns.lookup(req.body.url,(err, address, family) => {
+  //   if(err) res.json({ error: 'invalid url' });
+  //   const shortValue = Url.find().countDocuments() + 1;
+  //   const url = new Url({original_url: req.body.url,short_url: shortValue});
+  //   url.save(function(err,data){
+  //     if(err) res.json({ error: 'invalid url' });
+  //     res.json({original_url: req.body.url,short_url: shortValue});//{original_url: req.body.url, short_url: shortValue}
+  //   })
+  // })
 });
 
 app.get('/api/shorturl/:short_url',(req,res) => {
