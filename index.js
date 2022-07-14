@@ -33,7 +33,12 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl',(req,res) => {
-  const baseURL =new URL(req.body.url).origin.split("//")[1];
+  let baseURL;
+  if(req.body.url.split("/").length > 1){
+    baseURL = new URL(req.body.url).origin.split("//")[1]
+  }else{
+    baseURL = req.body.url;
+  }
   dns.lookup(baseURL, async (err,address,family) => {
     if(err) res.json({ error: 'invalid url' });
     let shortValue = await Url.find().countDocuments();
@@ -49,8 +54,8 @@ app.post('/api/shorturl',(req,res) => {
 });
 
 app.get('/api/shorturl/:short_url',(req,res) => {
-  const url = Url.findOne({short_url: parseInt(req.params.short_url)}).original_url;
-  res.json({url: url});
+  const url = Url.findOne({short_url: parseInt(req.params.short_url)});
+  res.json(...url);
 });
 
 app.listen(port, function() {
