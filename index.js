@@ -55,7 +55,7 @@ app.post('/api/shorturl',(req,res) => {
 
 app.get('/api/shorturl/:short_url',async (req,res) => {
   const url = await Url.findOne({short_url: parseInt(req.params.short_url)});
-  res.send(url);
+  res.redirect(url.original_url);
 });
 
 app.listen(port, function() {
