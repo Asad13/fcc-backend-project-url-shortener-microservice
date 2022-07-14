@@ -40,7 +40,7 @@ app.post('/api/shorturl',(req,res) => {
     const url = new Url({original_url: req.body.url,short_url: shortValue});
     try {
       await url.save();
-      res.json({original_url: url.original_url,short_url: url.short_url});
+      res.json({original_url: req.body.url,short_url: shortValue});
     } catch (error) {
       res.json({ error: 'error' });
     }
